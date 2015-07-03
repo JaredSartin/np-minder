@@ -28,5 +28,4 @@
 * Solvers for crossword, puzzle, etc
 
 # Research
-* http://pets.neopets.com/cpn/Klaouze/1/2.png
 * http://neopia.openneo.net/api/1/pet/customization?utf8=%E2%9C%93&redirect=http%3A%2F%2Fimpress.openneo.net%2Fwardrobe%23%7Bq%7D&name=Klaouze

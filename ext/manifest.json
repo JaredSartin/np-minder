@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "Neopets Helper",
+  "version": "0.0.1",
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "scripts": ["app/background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://www.neopets.com/*", "https://www.neopets.com/*"],
+      "js": ["app/page/basic.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": {
+      "19": "images/icon19.png",
+      "38": "images/icon38.png"
+    },
+    "default_title": "No notifications",
+    "default_popup": "app/popup.html"
+  },
+ "incognito": "spanning"
+}
