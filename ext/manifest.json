@@ -12,6 +12,10 @@
     {
       "matches": ["http://www.neopets.com/*", "https://www.neopets.com/*"],
       "js": ["app/page/basic.js"]
+    },
+    {
+      "matches": ["http://www.neopets.com/pirates/academy.phtml?type=status", "https://www.neopets.com/pirates/academy.phtml?type=status"],
+      "js": ["app/page/training.js"]
     }
   ],
   "browser_action": {
@@ -22,5 +26,5 @@
     "default_title": "No notifications",
     "default_popup": "app/popup.html"
   },
- "incognito": "spanning"
+ "incognito": "split"
 }
