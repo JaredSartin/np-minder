@@ -26,6 +26,12 @@ chrome.runtime.sendMessage({type: "rpopuppets"}, function(data) {
     container.querySelector(".defense").innerHTML = data.pets[name].defense;
     container.querySelector(".move").innerHTML = data.pets[name].move;
 
+    console.log(data.pets[name]);
+
+    if(data.pets[name].training) {
+      container.querySelector(".training").innerHTML = "Training at " + data.pets[name].training.school + " for " + data.pets[name].training.type;
+    }
+
     document.querySelector(".section.pets").appendChild(container);
   }
 });

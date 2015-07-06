@@ -1,5 +1,5 @@
 (function() {
-  var students = [];
+  var students = {};
   var school = location.pathname.split("/")[1];
   var inClassRegex = /^(\w*) \(Level [0-9]*\) is currently studying (\w*)$/;
   var classTypeRegex = /(?:(\d*) hrs, )?(?:(\d*) minutes, )?(?:(\d*) seconds)/;
@@ -18,19 +18,19 @@
       offset += match[2] ? (match[2] * 60 * 1000) : 0;
       offset += match[3] ? (match[3] * 1000) : 0;
       
-      students.push({
+      students[training[1]] = {
         name: training[1],
         type: training[2],
         school: school,
         endTime: (new Date()).getTime() + offset
-      });
+      };
 
       training = undefined;
     } else {
       training = inClassRegex.exec(rows[len].querySelectorAll("td b")[0].innerHTML);
     }
   }
-  if(students.length > 0) {
+  if(Object.keys(students).length > 0) {
     chrome.runtime.sendMessage({
       type: "intraining",
       students: students,

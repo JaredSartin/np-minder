@@ -1,3 +1,6 @@
+# Features
+* Pet Tracking per account
+
 # Wanted Features
 * Pound Surfer (Custom search criteria widgets)
 * Training alerts (When done!)
@@ -5,7 +8,6 @@
 * Timed event alerts (magma, Snowager, ???)
 * Timered event alerts (shrine, healing, scratchcard, ???)
 * Multiple account tracking (any timers or alerts associated with proper account)
-* Pet Tracking per account (which is active?)
 * DTI links per pet
 * NP tracking
 * Bank Tracking

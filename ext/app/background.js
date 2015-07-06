@@ -1,5 +1,7 @@
 NPMinder = {
   currentUser: undefined,
+  petFetch: undefined,
+
   handleUserUpdate: function(message) {
     chrome.storage.sync.get("accounts", function(data) {
       var accounts = {};
@@ -29,42 +31,63 @@ NPMinder = {
     });
   },
 
-  handleInTraining: function(sendResponse) {
-    console.log("Training - update my pets!");
-  },
-
-  handlePetsList: function(sendResponse) {
-    //
-    //
-    // NEED TO HANDLE UPDATES IN THE LOOP
-    // NEED TO HANDLE FORCE UPDATES
-    //
-    //
+  handleInTraining: function(request) {
     chrome.storage.sync.get("pets", function(data) {
       var pets = {};
-
       if(data.pets) {
         pets = data.pets;
       }
 
       for(name in pets) {
         if(pets[name].owner == NPMinder.currentUser) {
-          sendResponse({"pets": pets});
-          break;
+          pets[name].training = request.students[name];
         }
       }
 
-      NPMinder.fetchPets(function(fetched) {
-        for(name in fetched) {
-          if(pets[name]) {
-            // F - Deep copy
-          } else {
-            pets[name] = fetched[name];
+      chrome.storage.sync.set({"pets": pets})
+    });
+  },
+
+  handlePetsList: function(sendResponse, update) {
+    // Not returning training results?
+    chrome.storage.sync.get("pets", function(data) {
+      var pets = {};
+
+      var needRefresh = false;
+      if(update || !NPMinder.petFetch || (new Date() - NPMinder.petFetch > (30 * 60 * 1000))) {
+        needRefresh = true;
+      }
+
+      if(data.pets && !needRefresh) {
+        pets = data.pets;
+        for(name in pets) {
+          if(pets[name].owner == NPMinder.currentUser) {
+            needRefresh = true;
           }
         }
-        chrome.storage.sync.set({"pets": pets})
+      }
+
+      if(needRefresh || !data.pets) {
+        NPMinder.fetchPets(function(fetched) {
+          for(name in fetched) {
+            if(pets[name]) {
+              var copyStats = Object.keys(fetched[name]);
+              var len = copyStats.length;
+              while(len--) {
+                pets[name][copyStats[len]] = fetched[name][copyStats[len]];
+              }
+            } else {
+              pets[name] = fetched[name];
+            }
+          }
+          chrome.storage.sync.set({"pets": pets})
+          console.log(pets);
+          sendResponse({"pets": pets});
+        });
+      } else {
+        console.log(pets);
         sendResponse({"pets": pets});
-      });
+      }
     });
   },
 
@@ -99,8 +122,9 @@ NPMinder = {
 
         pets[pet.name] = pet;
 
-        cb(pets);
+        NPMinder.petFetch = new Date();
       }
+      cb(pets);
     }
     xhr.send();
   },
@@ -129,7 +153,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         NPMinder.handlePetsList(sendResponse);
         break;
       case "intraining":
-        NPMinder.handleInTraining(sendResponse);
+        NPMinder.handleInTraining(request);
         break;
       default:
         console.log("Unknown message type:");
